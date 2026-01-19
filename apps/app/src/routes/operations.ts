@@ -1,38 +1,41 @@
 import express, { Request, Response } from "express";
 import { createOperation, listOperations } from "../services/operations.service";
-import { exportContactOperationsCsv } from "../services/exports.service";
+import { exportContactOperationsCsv } from "../services/exports.service"; //genera un CSV de operaciones del contacto
 
-type ContactParams = { id: string };
+type ContactParams = { id: string }; //el parametro esperado en la URL es id
 
 const router = express.Router({ mergeParams: true });
 
+//exportar CSV del contacto
 router.get("/export", async (req: Request<ContactParams>, res: Response) => {
   try {
     const contactId = req.params.id;
 
-    const startUndefined = String(req.query.startUndefined) === "true";
-    const endNow = String(req.query.endNow) === "true";
+    const startUndefined = String(req.query.startUndefined) === "true"; //exportar desde la primera operación
+    const endNow = String(req.query.endNow) === "true"; //exportar hasta el momento actual
 
-    const startDate = req.query.startDate ? String(req.query.startDate) : undefined;
-    const endDate = req.query.endDate ? String(req.query.endDate) : undefined;
+    const startDate = req.query.startDate ? String(req.query.startDate) : undefined; //Si el usuario mandó startDate se convierte en string si no queda undefined
+    const endDate = req.query.endDate ? String(req.query.endDate) : undefined; //Igual que startDate, pero para el fin
 
-    
     const params = {
       contactId,
       startUndefined,
       endNow,
-      ...(startDate ? { startDate } : {}),
-      ...(endDate ? { endDate } : {}),
+      ...(startDate ? { startDate } : {}), //si el startdate tiene un valor se agrega, sino queda vacio
+      ...(endDate ? { endDate } : {}), //lo mismo que pasa en startdate, pasa aca
+                                      // el ... expande un objeto dentro de otro)
     };
 
-    const { csv, filename } = await exportContactOperationsCsv(params);
+    const { csv, filename } = await exportContactOperationsCsv(params); //valida el rango, consulta las operaciones, arma el CSV
 
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`); //para bajarlo como archivo
 
     // ayuda con los acentos
     return res.status(200).send("\uFEFF" + csv);
-  } catch (err: any) {
+
+    //manejo de errores
+  } catch (err: any) { 
     if (err?.message === "Contacto no encontrado") {
       return res.status(404).json({ ok: false, error: "Contacto no encontrado" });
     }
@@ -48,7 +51,8 @@ router.get("/export", async (req: Request<ContactParams>, res: Response) => {
   }
 });
 
-// POST 
+// POST (crear una operacion)
+
 router.post("/", async (req: Request<ContactParams>, res: Response) => {
   try {
     const { id } = req.params;
@@ -59,9 +63,10 @@ router.post("/", async (req: Request<ContactParams>, res: Response) => {
       return res.status(400).json({ ok: false, error: "La cantidad debe ser un número" });
     }
 
-    const result = await createOperation(id, amount);
+    const result = await createOperation(id, amount); //Guarda la operación en la tabla operation y actualiza el balance del contacto
     return res.status(201).json({ ok: true, ...result });
-  } catch (err: any) {
+
+  } catch (err: any) { //manejo de errores
     if (err?.message === "Contacto no encontrado") {
       return res.status(404).json({ ok: false, error: "Contacto no encontrado" });
     }
@@ -79,13 +84,13 @@ router.post("/", async (req: Request<ContactParams>, res: Response) => {
   }
 });
 
-// GET 
+// GET (listar operaciones de un contacto)
 router.get("/", async (req: Request<ContactParams>, res: Response) => {
   try {
-    const { id } = req.params;
-    const ops = await listOperations(id);
-    return res.json({ ok: true, contactId: id, operations: ops });
-  } catch (err: any) {
+    const { id } = req.params; //Saca el id del contacto
+    const ops = await listOperations(id); //trae el historial
+    return res.json({ ok: true, contactId: id, operations: ops }); //Devuelve un JSON con las operaciones
+  } catch (err: any) { //manejo de errores
     if (err?.message === "Contacto no encontrado") {
       return res.status(404).json({ ok: false, error: "Contacto no encontrado" });
     }

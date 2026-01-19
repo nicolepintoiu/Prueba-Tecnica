@@ -8,8 +8,8 @@ router.get("/export", async (req: Request, res: Response) => {
     const startUndefined = String(req.query.startUndefined) === "true";
     const endNow = String(req.query.endNow) === "true";
 
-    const startDate = req.query.startDate ? String(req.query.startDate) : undefined;
-    const endDate = req.query.endDate ? String(req.query.endDate) : undefined;
+    const startDate = req.query.startDate ? String(req.query.startDate) : undefined; //Si el usuario no marcó “desde el inicio”, entonces debe mandar startDate
+    const endDate = req.query.endDate ? String(req.query.endDate) : undefined; //Si el usuario no marcó “hasta hoy”, entonces debe mandar endDate
 
     const params = {
       startUndefined,
@@ -18,12 +18,14 @@ router.get("/export", async (req: Request, res: Response) => {
       ...(endDate ? { endDate } : {}),
     };
 
-    const { csv, filename } = await exportAllOperationsCsv(params);
+    const { csv, filename } = await exportAllOperationsCsv(params); //valida el rango, consulta las operaciones, arma el csv
 
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+
     return res.status(200).send("\uFEFF" + csv);
-  } catch (err: any) {
+
+  } catch (err: any) { //manejo de errores
     if (
       err?.message === "Falta fecha de inicio" ||
       err?.message === "Falta fecha de fin" ||
