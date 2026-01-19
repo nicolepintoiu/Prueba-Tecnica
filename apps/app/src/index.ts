@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import contactsRouter from "./routes/contacts";
+import operationsAllRouter from "./routes/operations.all";
+
 
 const app = express(); //crea el servidor de Express.
 app.use(express.json()); //middleware que permite que Express lea bodies JSON en requests
@@ -8,5 +10,7 @@ app.use(express.json()); //middleware que permite que Express lea bodies JSON en
 app.get("/", (_req, res) => res.send("API OK")); //ayuda para saber que el server está vivo
 
 app.use("/api/contacts", contactsRouter); //monta el router de contactos
+
+app.use("/api/operations", operationsAllRouter);
 
 app.listen(3000, () => console.log("running"));

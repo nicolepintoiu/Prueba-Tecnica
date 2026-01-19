@@ -1,4 +1,4 @@
-import "dotenv/config"; //Carga las variables del .env en process.env; así DATABASE_URL no queda undefined y Prisma sabe a qué base conectarse
+import "dotenv/config"; //Carga las variables del .env en process.env, así DATABASE_URL no queda undefined y Prisma sabe a qué base conectarse
 import { PrismaClient } from "./generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg"; //adaptador específico para PostgreSQL
 import { Pool } from "pg"; //es el driver clásico de Postgres para Node
