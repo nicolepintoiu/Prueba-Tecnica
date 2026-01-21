@@ -107,7 +107,7 @@ export function ContactsPage() {
       <header className="topbar">
         <div>
           <div className="title">Contactos</div>
-          <div className="subtitle">Dashboard de balances y operaciones</div>
+
         </div>
 
         <div className="topActions">
@@ -117,6 +117,14 @@ export function ContactsPage() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
+          
+          <Button
+            variant="ghost"
+            onClick={() => OperationsApi.exportAllCsv({ startUndefined: true, endNow: true })}
+            >
+            Exportar todas las operaciones (CSV)
+          </Button>
+
           <Button onClick={() => setOpenCreate(true)}>+ Nuevo</Button>
         </div>
       </header>
@@ -188,7 +196,9 @@ export function ContactsPage() {
         open={openExport}
         contact={selected}
         onClose={() => setOpenExport(false)}
-        onExport={(id, params) => OperationsApi.exportCsv(id, params)}
+        onExport={async (id, params) => {
+            OperationsApi.exportCsv(id, params); 
+        }}
       />
 
       <ProfileModal

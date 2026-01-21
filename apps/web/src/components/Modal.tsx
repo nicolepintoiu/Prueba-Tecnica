@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   width?: number;
-  zIndex?: number; // opcional para controlar capas
+  zIndex?: number; 
 };
 
 export function Modal({
