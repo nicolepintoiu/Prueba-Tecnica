@@ -56,17 +56,31 @@ router.get("/export", async (req: Request<ContactParams>, res: Response) => {
 router.post("/", async (req: Request<ContactParams>, res: Response) => {
   try {
     const { id } = req.params;
-    const body = (req.body ?? {}) as { amount?: unknown };
+
+    const body = (req.body ?? {}) as { type?: unknown; amount?: unknown };
+
+    const type = body.type;
     const amount = body.amount;
 
-    if (typeof amount !== "number") {
-      return res.status(400).json({ ok: false, error: "La cantidad debe ser un número" });
+    // Validaciones
+    if (type !== "add" && type !== "sub") {
+      return res.status(400).json({ ok: false, error: "El tipo debe ser 'add' o 'sub'" });
     }
 
-    const result = await createOperation(id, amount); //Guarda la operación en la tabla operation y actualiza el balance del contacto
-    return res.status(201).json({ ok: true, ...result });
+    if (typeof amount !== "number" || !Number.isFinite(amount)) {
+      return res.status(400).json({ ok: false, error: "La cantidad debe ser un número válido" });
+    }
 
-  } catch (err: any) { //manejo de errores
+    if (amount <= 0) {
+      return res.status(400).json({ ok: false, error: "La cantidad debe ser mayor que 0" });
+    }
+
+    const signedAmount = type === "sub" ? -amount : amount;
+
+    const result = await createOperation(id, signedAmount);
+
+    return res.status(201).json({ ok: true, ...result });
+  } catch (err: any) {
     if (err?.message === "Contacto no encontrado") {
       return res.status(404).json({ ok: false, error: "Contacto no encontrado" });
     }
@@ -76,9 +90,10 @@ router.post("/", async (req: Request<ContactParams>, res: Response) => {
     if (err?.message === "Desequilibrio de saldo") {
       return res.status(409).json({
         ok: false,
-        error: "El saldo no coincide con la suma de las operaciones",
+        error: "El saldo no coincide con la suma o resta de las operaciones",
       });
     }
+
     console.error(err);
     return res.status(500).json({ ok: false, error: "Error del servidor" });
   }

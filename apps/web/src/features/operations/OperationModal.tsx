@@ -14,7 +14,7 @@ export function OperationModal({
   onClose: () => void;
   onCreate: (contactId: string, payload: { type: OperationType; amount: number }) => Promise<void>;
 }) {
-  // OperationType debe ser: "add" | "sub"
+  
   const [type, setType] = useState<OperationType>("add");
   const [amount, setAmount] = useState<string>("0");
   const [saving, setSaving] = useState(false);
@@ -31,20 +31,20 @@ export function OperationModal({
   // Balance numérico
   const currentBalance = useMemo(() => Number(contact?.balance ?? 0), [contact?.balance]);
 
-  // ¿Quedaría negativo?
+
   const wouldBeNegative = useMemo(() => {
     if (!contact) return false;
     if (!Number.isFinite(amt) || amt <= 0) return false;
     return type === "sub" && amt > currentBalance;
   }, [contact, amt, type, currentBalance]);
 
-  // Validación final (bloquea botón)
+
   const canSave = useMemo(() => {
     return !!contact && Number.isFinite(amt) && amt > 0 && !wouldBeNegative;
   }, [contact, amt, wouldBeNegative]);
 
   async function submit() {
-    // doble seguridad
+
     if (!contact) return;
     if (!canSave) return;
 
@@ -129,7 +129,7 @@ export function OperationModal({
         </div>
       ) : (
         <div className="note" style={{ marginTop: 10 }}>
-          Si el backend valida saldo/consistencia, aquí solo mostramos estimación.
+          El balance estimado es una referencia para visualizar en cuánto quedará el balance actual antes de realizar la operación.
         </div>
       )}
     </Modal>

@@ -100,10 +100,10 @@ export function ProfileModal({
                 </div>
               </div>
 
-              <div className="rowEnd gap">
-                <Button variant="ghost" onClick={onEdit}>Editar</Button>
+              <div className="profileActions">
+                <Button onClick={onEdit}>Editar</Button>
                 <Button onClick={onNewOp}>Nueva operación</Button>
-                <Button variant="ghost" onClick={onExport}>Exportar CSV</Button>
+                <Button onClick={onExport}>Exportar CSV</Button>
               </div>
             </div>
           </div>

@@ -9,6 +9,11 @@ function fmtDate(iso: string) {
   return d.toLocaleString();
 }
 
+function toNum(v: unknown) {
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
 export function HistoryModal({
   open,
   contact,
@@ -22,10 +27,13 @@ export function HistoryModal({
   loading: boolean;
   onClose: () => void;
 }) {
+  if (!open) return null;
+  if (!contact) return null;
+
   return (
     <Modal
       open={open}
-      title={`Historial — ${contact?.name ?? ""}`}
+      title={`Historial — ${contact.name}`}
       onClose={onClose}
       width={760}
       footer={
@@ -44,30 +52,51 @@ export function HistoryModal({
               <th className="right">Balance posterior</th>
             </tr>
           </thead>
+
           <tbody>
             {loading ? (
-              <tr><td colSpan={4} className="muted">Cargando...</td></tr>
+              <tr>
+                <td colSpan={4} className="muted">Cargando...</td>
+              </tr>
             ) : operations.length === 0 ? (
-              <tr><td colSpan={4} className="muted">Sin operaciones</td></tr>
+              <tr>
+                <td colSpan={4} className="muted">Sin operaciones</td>
+              </tr>
             ) : (
-              operations.map((op) => {
-                const isIn = op.type === "add";
-                console.log(op);
+              operations.map((op: any) => {
+                const amountNum = toNum(op.amount);
+
+                const type = (op.type ?? (amountNum >= 0 ? "add" : "sub")) as "add" | "sub";
+                const isIn = type === "add";
+
+                const balanceAfterNum =
+                  op.balanceAfter === null || op.balanceAfter === undefined
+                    ? null
+                    : toNum(op.balanceAfter);
+
                 return (
-                    <tr key={op.id}>
+                  <tr key={op.id}>
                     <td>{fmtDate(op.createdAt)}</td>
                     <td>
-                        {isIn ? <Pill kind="green">Ingreso</Pill> : <Pill kind="red">Retiro</Pill>}
+                      {isIn ? (
+                        <Pill kind="green">Ingreso</Pill>
+                      ) : (
+                        <Pill kind="red">Retiro</Pill>
+                      )}
                     </td>
+
                     <td className="right">
-                        {isIn ? `+$${op.amount.toFixed(2)}` : `-$${op.amount.toFixed(2)}`}
+                      {isIn
+                        ? `+$${Math.abs(amountNum).toFixed(2)}`
+                        : `-$${Math.abs(amountNum).toFixed(2)}`}
                     </td>
+
                     <td className="right">
-                        {typeof op.balanceAfter === "number" ? `$${op.balanceAfter.toFixed(2)}` : "-"}
+                      {balanceAfterNum === null ? "-" : `$${balanceAfterNum.toFixed(2)}`}
                     </td>
-                    </tr>
+                  </tr>
                 );
-                })
+              })
             )}
           </tbody>
         </table>

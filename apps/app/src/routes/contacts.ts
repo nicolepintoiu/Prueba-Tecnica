@@ -43,7 +43,7 @@ router.post("/", async (req: Request, res: Response) => {
     const contact = await createContact(email, name); //si esta todo bien crea el contacto en la BD
     return res.status(201).json(contact); //responde 201 con el contacto creado
   } catch (err: any) {
-    if (err?.code === "P2002") { //prisma lanza P2002 cuando violas un @unique
+    if (err?.code === "P2002") { //prisma lanza P2002 cuando se viola un @unique
       return res.status(409).json({ ok: false, error: "El correo ya existe" });
     }
     if (err?.message === "Error de validacion") {
