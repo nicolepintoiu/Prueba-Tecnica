@@ -181,6 +181,18 @@ body{
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
+.modalOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.modalContent{
+  position: relative;
+}
 .mutedSmall{color:var(--muted);font-size:12px}
 .check{display:flex;gap:10px;align-items:center;color:var(--text)}
 .check input{transform: scale(1.1)}

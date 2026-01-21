@@ -90,7 +90,7 @@ export function ExportCsvModal({
           </label>
         )}
 
-        <div className="note">Si tu backend usa fecha/hora exacta, luego lo ajustamos. Esto cubre el caso típico del enunciado.</div>
+        <div className="note">Arreglar luego fecha/hora exacta.</div>
       </div>
     </Modal>
   );

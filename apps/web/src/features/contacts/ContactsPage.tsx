@@ -28,6 +28,7 @@ export function ContactsPage() {
   const [opsLoading, setOpsLoading] = useState(false);
   const [ops, setOps] = useState<Operation[]>([]);
 
+
   async function refresh() {
     setLoading(true);
     try {
@@ -76,7 +77,6 @@ export function ContactsPage() {
     await OperationsApi.create(contactId, payload);
     await refresh();
 
-    // si estoy viendo modales del mismo contacto, refresco operaciones
     if (selected?.id === contactId) {
       await loadOperations(contactId);
     }
@@ -100,6 +100,7 @@ export function ContactsPage() {
       loadOperations(c.id);
     }
   }
+  
 
   return (
     <div className="page">

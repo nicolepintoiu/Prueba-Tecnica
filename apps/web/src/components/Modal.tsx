@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   open: boolean;
@@ -7,21 +8,45 @@ type Props = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   width?: number;
+  zIndex?: number; // opcional para controlar capas
 };
 
-export function Modal({ open, title, onClose, children, footer, width = 720 }: Props) {
+export function Modal({
+  open,
+  title,
+  onClose,
+  children,
+  footer,
+  width = 720,
+  zIndex = 1000,
+}: Props) {
   if (!open) return null;
 
-  return (
-    <div className="overlay" onMouseDown={onClose}>
-      <div className="modal" style={{ width }} onMouseDown={(e) => e.stopPropagation()}>
+  return createPortal(
+    <div
+      className="overlay"
+      style={{ zIndex }}
+      onMouseDown={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="modal"
+        style={{ width, zIndex: zIndex + 1 }}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         <div className="modalHeader">
           <h3>{title}</h3>
-          <button className="x" onClick={onClose}>✕</button>
+          <button className="x" onClick={onClose} type="button">
+            ✕
+          </button>
         </div>
+
         <div className="modalBody">{children}</div>
+
         {footer ? <div className="modalFooter">{footer}</div> : null}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

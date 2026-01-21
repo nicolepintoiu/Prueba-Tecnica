@@ -51,7 +51,7 @@ export function EditNameModal({
       }
     >
       <TextField label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
-      <div className="note">El email no se puede modificar (según la prueba).</div>
+      
     </Modal>
   );
 }
