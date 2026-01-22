@@ -34,7 +34,7 @@ En la raíz del repo deberías tener un archivo como:
         Poner: psql -h localhost -p 5432 -U prueba_user -d prueba_tecnica < prueba_tecnica.sql
         Si al restaurar el dump te pide password, usa: prueba123
 
-> **Opcional**: Crear usuario prueba_user si no existe
+### Opcional: Crear usuario prueba_user si no existe
         ```bash
         Entrar a PostgreSQL como admin:
             psql -U postgres
