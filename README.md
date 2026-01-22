@@ -55,6 +55,9 @@ En la raíz del repo deberías tener un archivo como:
         npm install
 
 ### 1.4 Ejecutar REST Api
+
+        > En desarrollo, la web usa un proxy de Vite (ver `apps/web/vite.config.ts`) para redirigir las llamadas `/api` hacia la REST API. Por eso, primero debes tener la API corriendo.
+        
         cd apps/app
         npx prisma generate
         npm run dev
