@@ -37,7 +37,7 @@ En la raíz del repo deberías tener un archivo como:
 ### Opcional: Crear usuario prueba_user si no existe
         ```bash
         Entrar a PostgreSQL como admin:
-            psql -U postgres
+            ejecuta: psql -U postgres
         ```
         Dentro de psql ejecuta: 
             CREATE USER prueba_user WITH PASSWORD 'prueba123';
@@ -60,7 +60,7 @@ En la raíz del repo deberías tener un archivo como:
         npm run dev
 
         > Importante: deja la API corriendo en esta terminal.  
-        > (Luego abre **otra terminal** para ejecutar la web.
+        > Luego abre otra terminal para ejecutar la web.
 ---
         
 ## 2) Aplicación Web (React + Vite)
