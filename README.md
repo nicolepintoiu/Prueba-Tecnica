@@ -88,16 +88,30 @@ En la raíz del repo deberías tener un archivo como:
 ## 4) Posible problema
 
     ### Error: `Cannot find module 'dotenv/config'` al ejecutar `npx prisma generate`
-    Si al correr:
     
+    Si al correr:
     ```bash
     cd apps/app
     npx prisma generate
 
-    Aparece un error como: Failed to load config file ... prisma.config.ts ... Cannot find module 'dotenv/config'
+    Aparece un error como: 
+        > Failed to load config file ... prisma.config.ts 
+        > Cannot find module 'dotenv/config'
 
-    Debes de:
-    cd apps/app
-    npm install dotenv
+    Solucion:
 
-    y luego volver a intentar: npx prisma generate
+        1. Asegurate de instalar dependencias en la raiz del repo:
+        
+            npm install
+
+        2. Intenta de nuevo:
+        
+            cd apps/app
+            npm install dotenv
+            npx prisma generate
+
+        3. Si aún falla, instala dotenv específicamente en apps/app:
+        
+            cd apps/app
+            npm install dotenv
+            npx prisma generate
