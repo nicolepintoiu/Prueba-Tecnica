@@ -47,7 +47,9 @@ En la raíz del repo deberías tener un archivo como:
         Salir de psql: \q
 
 ### 1.2 Variables de entorno
-        Crea este archivo si no existe: apps/app/.env
+        > Importante: El archivo `.env` NO está incluido en el repositorio (por seguridad).
+        > Debes crearlo manualmente en `apps/app/.env`.
+        
         Contenido del archivo: DATABASE_URL="postgresql://prueba_user:prueba123@localhost:5432/prueba_tecnica?schema=public"
 
 ### 1.3 Instalar dependencias (repo) 
