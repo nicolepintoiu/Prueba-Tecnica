@@ -89,8 +89,8 @@ export async function exportContactOperationsCsv(params: ExportContactParams) {
   const csv = [header, ...rows].join("\n") + "\n";
 
   // el sanitizeFilenamePart reemplaza caracteres raros por _
-  const who = sanitizeFilenamePart(contact.email || contact.id); //usa el email para identificar al dueño en el nombre del archivo
-  const filename = `transactions_contact_${who}_${startLabel}_to_${endLabel}.csv`; //resultado
+  const who = sanitizeFilenamePart(contact.name || contact.email || contact.id);
+  const filename = `operaciones_${who}_${startLabel}-${endLabel}.csv`;
 
   return { csv, filename };
 }
