@@ -1,6 +1,8 @@
 //Modal para crear un nuevo contacto nombre + email y llamar al backend mediante onCreate
 
-import React, { useMemo, useState } from "react"; //
+import React, { useMemo, useState } from "react"; //useState: guarda valores que cambian (name, email, saving)
+                                                  //useMemo: recalcula solo cuando cambian sus dependencias. Ejemplo: canSave = validación del formulario.
+                                                  // Solo se recalcula cuando cambian name o email.
 import { Modal } from "../../components/Modal";
 import { TextField } from "../../components/TextField";
 import { Button } from "../../components/Button";
@@ -12,12 +14,13 @@ export function ContactFormModal({
 }: {
   open: boolean;
   onClose: () => void;
-  onCreate: (payload: { name: string; email: string }) => Promise<void>;
+  onCreate: (payload: { name: string; email: string }) => Promise<void>; //crea el contacto, llama al backend
 }) {
-  const [name, setName] = useState(""); //formulario, lo que el usuario escribe
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(""); //valores actuales que están en los inputs
+  const [email, setEmail] = useState(""); //funciones para actualizar esos valores cuando el usuario escribe
   const [saving, setSaving] = useState(false); //bloquea el boton mientras se esta guardando
   const canSave = useMemo(() => name.trim().length >= 2 && email.includes("@"), [name, email]); //validcion minima
+  //canSave es una variable booleana (true o false) que indica si ya se puede guardar o crear el contacto
 
   async function submit() { //se ejecuta al presionar crear
     if (!canSave) return;

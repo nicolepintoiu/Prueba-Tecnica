@@ -1,5 +1,4 @@
-
-import type { Contact, Operation } from "../types";
+import type { Contact, Operation } from "../types"; //TypeScript que describe como luce un contacto, id, name, email,etc y una operacion
 
 export const OperationsApi = {
     //listar operaciones de un contacto
@@ -9,12 +8,12 @@ export const OperationsApi = {
     
         const json = await res.json(); //covierte en json la respuesta
     
-        //
+        //extraemos el array de operaciones
         const ops = (json?.operations ?? []) as any[];
     
         //arreglo de cada operacion para que el front no se rompa
         return ops.map((op) => ({
-          ...op,
+          ...op, //trae todas las propiedades que ya tiene operacion
           amount: Number(op.amount),
           balanceAfter: op.balanceAfter == null ? null : Number(op.balanceAfter),
           type: op.type ?? (Number(op.amount) >= 0 ? "add" : "sub"),
