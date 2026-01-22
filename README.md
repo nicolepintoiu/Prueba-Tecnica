@@ -85,6 +85,8 @@ En la raíz del repo deberías tener un archivo como:
 
     El archivo prueba_tecnica.sql permite restaurar la base de datos localmente (tablas y datos) para revisar la prueba
 
+---
+
 ## 4) Posible problema
 
 ### Error: `Cannot find module 'dotenv/config'` al ejecutar `npx prisma generate`
