@@ -12,7 +12,15 @@ Incluye además un **dump** de base de datos para que pueda revisar los datos.
 
 - **Node.js** (recomendado: 18+)
 - **PostgreSQL** (recomendado: 16+)
-- **npm** 
+- **npm**
+
+## Guia rapida
+
+- **Restaurar BD (dump)**
+- **Crear .env**
+- **Instalar dependencias en la raiz del repo: npm install**
+- **Terminal 1 --> API: npm run dev**
+- **Terminal 2 --> Web: npm run dev**
 
 > Nota: Los comandos marcados como `bash` son comandos para ejecutar en la terminal.
 
@@ -95,6 +103,7 @@ En la raíz del repo deberías tener un archivo como:
     ```bash
     cd apps/app
     npx prisma generate
+    ```
 
     Aparece un error como: 
         > Failed to load config file ... prisma.config.ts 
@@ -106,13 +115,8 @@ En la raíz del repo deberías tener un archivo como:
         
             npm install
 
-### 2. Intenta de nuevo:
-        
-            cd apps/app
-            npm install dotenv
-            npx prisma generate
 
-### 3. Si aún falla, instala dotenv específicamente en apps/app:
+### 2. Si aún falla, instala dotenv específicamente en apps/app:
         
             cd apps/app
             npm install dotenv
