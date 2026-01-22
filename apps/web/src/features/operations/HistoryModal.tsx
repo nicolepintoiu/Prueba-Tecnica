@@ -4,11 +4,13 @@ import { Button } from "../../components/Button";
 import { Pill } from "../../components/Pill";
 import type { Contact, Operation } from "../../types";
 
+//formatea la fecha para mostrala bonita
 function fmtDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleString();
 }
 
+//convierte cualquier cosa en numero
 function toNum(v: unknown) {
   const n = typeof v === "number" ? v : Number(v);
   return Number.isFinite(n) ? n : 0;
@@ -22,8 +24,8 @@ export function HistoryModal({
   onClose,
 }: {
   open: boolean;
-  contact: Contact | null;
-  operations: Operation[];
+  contact: Contact | null; //recibe el contacto seleccionado
+  operations: Operation[]; //lista de operaciones del contacto
   loading: boolean;
   onClose: () => void;
 }) {
@@ -63,11 +65,11 @@ export function HistoryModal({
                 <td colSpan={4} className="muted">Sin operaciones</td>
               </tr>
             ) : (
-              operations.map((op: any) => {
+              operations.map((op: any) => { //recorre la lista
                 const amountNum = toNum(op.amount);
-
+                //determinamos el tipo de operacion
                 const type = (op.type ?? (amountNum >= 0 ? "add" : "sub")) as "add" | "sub";
-                const isIn = type === "add";
+                const isIn = type === "add"; //bandera booleana para saber si es ingreso. isIn: variable que solo puede ser true o false
 
                 const balanceAfterNum =
                   op.balanceAfter === null || op.balanceAfter === undefined
@@ -86,8 +88,8 @@ export function HistoryModal({
                     </td>
 
                     <td className="right">
-                      {isIn
-                        ? `+$${Math.abs(amountNum).toFixed(2)}`
+                      {isIn //true : ingreso, false: retiro
+                        ? `+$${Math.abs(amountNum).toFixed(2)}` //si es ingreso muestra +$ y toFixed(2) para mostrar dos decimales (10,00)
                         : `-$${Math.abs(amountNum).toFixed(2)}`}
                     </td>
 

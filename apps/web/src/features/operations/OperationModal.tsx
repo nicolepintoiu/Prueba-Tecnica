@@ -12,37 +12,42 @@ export function OperationModal({
   open: boolean;
   contact: Contact | null;
   onClose: () => void;
-  onCreate: (contactId: string, payload: { type: OperationType; amount: number }) => Promise<void>;
+  onCreate: (contactId: string, payload: { type: OperationType; amount: number }) => Promise<void>; //crea la operacion llama al backend
 }) {
   
+  // Estado del tipo de operación: "add" = ingreso, "sub" = retiro
   const [type, setType] = useState<OperationType>("add");
+  // Estado del monto como string porque viene de un input
   const [amount, setAmount] = useState<string>("0");
+  // Estado para desactivar botón y mostrar "Procesando"
   const [saving, setSaving] = useState(false);
 
-  // Reset cuando abres modal o cambias de contacto
+  // Reset del form cuando abres modal o cambias de contacto
   React.useEffect(() => {
     if (!open) return;
     setType("add");
     setAmount("0");
   }, [contact?.id, open]);
 
+  // Convertimos el string del input a número
   const amt = useMemo(() => Number(amount), [amount]);
 
-  // Balance numérico
+  //Balance actual como número 
   const currentBalance = useMemo(() => Number(contact?.balance ?? 0), [contact?.balance]);
 
-
+  // Validacion, si es retiro y el monto es mayor al balance, el saldo quedaría negativo
   const wouldBeNegative = useMemo(() => {
     if (!contact) return false;
     if (!Number.isFinite(amt) || amt <= 0) return false;
-    return type === "sub" && amt > currentBalance;
+    return type === "sub" && amt > currentBalance; //retiro mayor al balance invalido
   }, [contact, amt, type, currentBalance]);
 
-
+  //define si se puede ejecutar, debe haber un contacto,amt debe ser mayor que 0 y un numero valido y no exceder el balance si es retiro
   const canSave = useMemo(() => {
     return !!contact && Number.isFinite(amt) && amt > 0 && !wouldBeNegative;
   }, [contact, amt, wouldBeNegative]);
 
+  //handler del boton ejecutar
   async function submit() {
 
     if (!contact) return;
@@ -50,13 +55,13 @@ export function OperationModal({
 
     setSaving(true);
     try {
-      await onCreate(contact.id, { type, amount: amt });
+      await onCreate(contact.id, { type, amount: amt }); //handler, crear la operacion en el backend
       onClose();
     } finally {
       setSaving(false);
     }
   }
-
+  // Calcula el "balance estimado" solo para mostrar en pantalla (no guarda nada)
   const projected = useMemo(() => {
     if (!contact) return 0;
     const safeAmt = Number.isFinite(amt) ? amt : 0;

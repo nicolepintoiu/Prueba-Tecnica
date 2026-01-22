@@ -4,18 +4,20 @@ import { Button } from "../../components/Button";
 import type { Contact, Operation } from "../../types";
 import { Pill } from "../../components/Pill";
 
+//convierte una fecha iso a una fecha bonita para mostrar
 function fmtDate(iso?: string) {
   if (!iso) return "—";
   return new Date(iso).toLocaleDateString();
 }
 
+//muestra la informacion del contacto
 export function ProfileModal({
   open,
   contact,
   operations,
   loading,
   onClose,
-  onEdit,
+  onEdit, 
   onNewOp,
   onExport,
 }: {
@@ -24,21 +26,22 @@ export function ProfileModal({
   operations: Operation[];
   loading: boolean;
   onClose: () => void;
-  onEdit: () => void;
-  onNewOp: () => void;
-  onExport: () => void;
+  onEdit: () => void; //handler para abrir editar
+  onNewOp: () => void; // == para abrir nueva operacion
+  onExport: () => void; // == para abrir exportar
 }) {
-  const stats = useMemo(() => {
-    const totalOps = operations.length;
-    const income = operations
-      .filter((o) => o.type === "add")
-      .reduce((a, b) => a + b.amount, 0);
+  const stats = useMemo(() => { //stats hace un resumen calculado a partir de cuanto se ingreso o retiro en total, etc)
+    const totalOps = operations.length; //total de operaciones
+
+    const income = operations //total de ingresos
+      .filter((o) => o.type === "add") //solo me quedo con las operaciones que son add
+      .reduce((a, b) => a + b.amount, 0); //suma los amount de esas operaciones
 
     const withdraw = operations
-      .filter((o) => o.type === "sub")
+      .filter((o) => o.type === "sub") //igual que arriba pero filtrando sub
       .reduce((a, b) => a + b.amount, 0);
 
-    return { totalOps, income, withdraw };
+    return { totalOps, income, withdraw }; //devuelve el resumen de un objeto
   }, [operations]);
 
   return (
