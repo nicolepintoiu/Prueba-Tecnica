@@ -4,11 +4,11 @@ import { createPortal } from "react-dom";
 type Props = {
   open: boolean;
   title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-  width?: number;
-  zIndex?: number; 
+  onClose: () => void; //para cerrar el modal
+  children: React.ReactNode; //contenido del modal 
+  footer?: React.ReactNode; //botones, cancelar, guardar
+  width?: number; //ancho del modal
+  zIndex?: number; //aseguras que el modal quede por encima de todo
 };
 
 export function Modal({
@@ -24,9 +24,9 @@ export function Modal({
 
   return createPortal(
     <div
-      className="overlay"
-      style={{ zIndex }}
-      onMouseDown={onClose}
+      className="overlay" //fondo semi transparente
+      style={{ zIndex }} //asegura que el overley este encima del resto
+      onMouseDown={onClose} //cierra si haaces click fuera del modal 
       role="dialog"
       aria-modal="true"
     >

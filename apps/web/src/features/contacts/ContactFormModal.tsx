@@ -1,32 +1,34 @@
-import React, { useMemo, useState } from "react";
+//Modal para crear un nuevo contacto nombre + email y llamar al backend mediante onCreate
+
+import React, { useMemo, useState } from "react"; //
 import { Modal } from "../../components/Modal";
 import { TextField } from "../../components/TextField";
 import { Button } from "../../components/Button";
 
 export function ContactFormModal({
-  open,
-  onClose,
-  onCreate,
+  open, //true se muestra el modal
+  onClose, //se cierra
+  onCreate, //crea el contacto
 }: {
   open: boolean;
   onClose: () => void;
   onCreate: (payload: { name: string; email: string }) => Promise<void>;
 }) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(""); //formulario, lo que el usuario escribe
   const [email, setEmail] = useState("");
-  const [saving, setSaving] = useState(false);
-  const canSave = useMemo(() => name.trim().length >= 2 && email.includes("@"), [name, email]);
+  const [saving, setSaving] = useState(false); //bloquea el boton mientras se esta guardando
+  const canSave = useMemo(() => name.trim().length >= 2 && email.includes("@"), [name, email]); //validcion minima
 
-  async function submit() {
+  async function submit() { //se ejecuta al presionar crear
     if (!canSave) return;
-    setSaving(true);
+    setSaving(true); //activamos el estado de guardando
     try {
       await onCreate({ name: name.trim(), email: email.trim() });
       setName("");
-      setEmail("");
+      setEmail(""); //si se creo bien se cierra el modal y se limpia el input
       onClose();
     } finally {
-      setSaving(false);
+      setSaving(false); //se quita el estado guardando
     }
   }
 
@@ -39,7 +41,7 @@ export function ContactFormModal({
       footer={
         <div className="rowEnd">
           <Button variant="ghost" onClick={onClose}>Cancelar</Button>
-          <Button disabled={!canSave || saving} onClick={submit}>
+          <Button disabled={!canSave || saving} onClick={submit}> 
             {saving ? "Creando..." : "Crear"}
           </Button>
         </div>
