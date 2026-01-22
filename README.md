@@ -84,3 +84,20 @@ En la raíz del repo deberías tener un archivo como:
 ## 3) Dump incluido
 
     El archivo prueba_tecnica.sql permite restaurar la base de datos localmente (tablas y datos) para revisar la prueba
+
+## 4) Posible problema
+
+    ### Error: `Cannot find module 'dotenv/config'` al ejecutar `npx prisma generate`
+    Si al correr:
+    
+    ```bash
+    cd apps/app
+    npx prisma generate
+
+    Aparece un error como: Failed to load config file ... prisma.config.ts ... Cannot find module 'dotenv/config'
+
+    Debes de:
+    cd apps/app
+    npm install dotenv
+
+    y luego volver a intentar: npx prisma generate
